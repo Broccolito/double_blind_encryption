@@ -1,6 +1,5 @@
 library(digest)
 library(gtools)
-library(glue)
 
 #Defining elements in the dictionary
 all_elements = c(letters, LETTERS, seq(0, 9, 1), rep("?", 1))
@@ -85,20 +84,20 @@ hash_string_to_string = function(hash_string){
 }
 
 passcode_to_hash = function(passcode){
-  len_password = nchar(passcode) 
+  len_passcode = nchar(passcode) 
   passcode = unlist(strsplit(passcode, split = ""))
-  missing_char = 50 - len_passcode
+  missing_char = 25 - len_passcode
   pos = sample(1:len_passcode, size = missing_char, replace = TRUE)
   for(i in pos){
     passcode = append(passcode, values = "?", after = i)
   }
   passcode = paste(passcode, collapse = "")
-  passcode = string_to_hash_string(passcode)
-  return(passcode)
+  hashcode = string_to_hash_string(string_to_hash_string(passcode))
+  return(hashcode)
 }
 
 hash_to_passcode = function(hash_string){
-  temp = hash_string_to_string(hash_string)
+  temp = hash_string_to_string(hash_string_to_string(hash_string))
   temp = unlist(strsplit(temp, split = ""))
   temp[temp == "?"] = ""
   temp = paste(temp, collapse = "")
@@ -116,9 +115,7 @@ multiple_hash_encoding = function(string){
   return(mhe2(mhe2(mhe2(mhe2(mhe2(string))))))
 }
 
-
-
 #Testing
 generate_dict(171)
-hash_to_passcode(password_to_hash("happy"))
+hash_to_passcode(passcode_to_hash("WhatEverYouWant"))
 # [1] "happy"
